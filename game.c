@@ -138,18 +138,33 @@ game_struct* init_game(){
 void display_board(game_struct *game)
 {
     int i, j;
-    printf("  0 1 2 3 4 5 6 7 8 9\n");
+    printf("   ");
+    for(i = 1; i < game->board_size_x+1; i++){
+        if(i < 10){
+            printf(" %i ", i);
+        }
+        else{
+            printf("%i ", i);
+        }
+
+    }
+    printf("\n");
     for(i = 0; i < game->board_size_y; i++) {
-        printf("%i ", i);
+        if(i < 9){
+            printf(" %i ", i+1);
+        }
+        else{
+            printf("%i ", i+1);
+        }
         for (j = 0; j < game->board_size_x; j++){
             if(game->board[i][j]=='X'){
-                printf("X");
+                printf(" X");
             }
             else if(game->board[i][j]=='O'){
-                printf("O");
+                printf(" O");
             }
             else{
-                printf("-");
+                printf(" -");
             }
             printf(" ");
         }
@@ -210,8 +225,9 @@ int check_coordinates(int x, int y, char **board)
 int input_coordinates(int *x, int *y, game_struct *game){
     int valid_coordinates = 0;
     do {
-        *y = input_y(game);
         *x = input_x(game);
+        *y = input_y(game);
+
         if (check_coordinates(*x, *y, game->board) == 0){
             valid_coordinates = 0;
         }else{
@@ -228,13 +244,14 @@ int start_game(game_struct *game)
     printf("%s, jouez votre pion en entrant les coordonnees ordonnee abscisse\n", game->first_player);
     int x = -1, y = -1;
     if(input_coordinates(&x, &y, game)){
-        game->board[x][y] = 'X';
+        game->board[y-1][x-1] = 'X';
     }
+    printf("x : %i, y : %i\n", x, y);
 
     display_board(game);
     printf("%s, jouez votre pion en entrant les coordonnees ordonnee abscisse\n", game->second_player);
     if(input_coordinates(&x, &y, game)){
-        game->board[x][y] = 'O';
+        game->board[y-1][x-1] = 'O';
     }
 
     display_board(game);
