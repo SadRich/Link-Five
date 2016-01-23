@@ -44,11 +44,11 @@ int input_board_size_y(int size_y)
 
 char** init_board(char **board, int board_size_x, int board_size_y)
 {
-    board = malloc(board_size_y * sizeof(char)); // Creation d'un tableau a une dimension
+    board = malloc(board_size_y * sizeof(char*)); // Creation d'un tableau a une dimension
     int i, j;
     for(i = 0; i < board_size_y; i++) // Parcours de chaque cellule du tableau pour creer des tableaux
     {
-       *(board + i) = malloc(board_size_x * sizeof(char)); // "*(board + i" equivaut a "board[i]" => on creer les tableaux dans les cellules
+       *(board + i) = malloc(board_size_x * sizeof(char*)); // "*(board + i" equivaut a "board[i]" => on creer les tableaux dans les cellules
     }
 
     for(i = 0; i < board_size_y; i++){
@@ -59,8 +59,9 @@ char** init_board(char **board, int board_size_x, int board_size_y)
     return board;
 }
 
-game_struct* new_game(char* first_player, char* second_player, int board_size_x, int board_size_y) // sert uniquement a la fonction init_game
+game_struct* new_game(char *first_player, char *second_player, int board_size_x, int board_size_y) // sert uniquement a la fonction init_game
 {
+    printf("new_game");
     game_struct* game = malloc(sizeof(game_struct));
     game->first_player = first_player; // first player est vide mais on lui rajoute la valeur de first player dans init_game
     game->second_player = second_player;
@@ -83,17 +84,29 @@ game_struct* init_game(){
     second_player = malloc(100 * sizeof(char));
 
     printf("Bienvenue dans le jeu Link Five.\nPour commencer, veuillez saisir le pseudo des deux joueurs.\n");
+
     printf("Joueur 1 : ");
-    scanf("%s", first_player); // va etre utilise dans la fonction new_game
+    int check_first_player = 0;
+    while(!check_first_player) {
+        check_first_player = scanf("%s", first_player); // va etre utilise dans la fonction new_game
+    }
+
     printf("\nJoueur 2 : ");
-    scanf("%s", second_player); // va etre utilise dans la fonction new_game
+    int check_second_player = 0;
+    while(!check_second_player){
+        check_second_player = scanf("%s", second_player);
+    } // va etre utilise dans la fonction new_game
 
     int board_size_x;
     printf("Definissez le nombre de colonnes pour le repere (min = 10 et max = 20):\n");
     do{
-        scanf("%d", &board_size_x);
+        int check_board_size_x = 0;
+        while(!check_board_size_x){
+            check_board_size_x = scanf("%d", &board_size_x);
+        }
+
         if(board_size_x >= 10 && board_size_x <= 20){
-            printf("Nombre de colonnes: %d", board_size_x);
+            printf("Nombre de colonnes: %d\n", board_size_x);
         }
         else{
             printf("Valeur invalide, veuillez entrer a nouveau une valeur pour definir le nombre de colonnes:\n");
@@ -103,9 +116,12 @@ game_struct* init_game(){
     int board_size_y;
     printf("Definissez le nombre de lignes pour le repere (min = 10 et max = 20):\n");
     do{
-        scanf("%d", &board_size_y);
+        int check_board_size_y = 0;
+        while(!check_board_size_y){
+            check_board_size_y = scanf("%d", &board_size_y);
+        }
         if(board_size_y >= 10 && board_size_y <= 20){
-            printf("Nombre de colonnes: %d", board_size_y);
+            printf("Nombre de lignes: %d\n", board_size_y);
         }
         else{
             printf("Valeur invalide, veuillez entrer a nouveau une valeur pour definir le nombre de lignes:\n");
@@ -115,8 +131,6 @@ game_struct* init_game(){
     game_struct *game = new_game(first_player, second_player, board_size_x, board_size_y);
     printf("\n\n");
 
-    free(first_player);
-    free(second_player);
 
     return game;
 }
@@ -149,7 +163,10 @@ int input_y(game_struct *game)
     int y = -1;
     do{
         printf("Entrez l'ordonnee : ");
-        scanf("%d", &y);
+        int check_y = 0;
+        while(!check_y){
+            check_y = scanf("%d", &y);
+        }
         if (y < 0 || y > game->board_size_y - 1){
             printf("Ordonnee non existante dans le repere, veuillez saisir une nouvelle ordonnee\n");
         }
@@ -166,7 +183,11 @@ int input_x(game_struct *game)
     int x = -1;
     do{
         printf("Entrez l'abscisse : ");
-        scanf("%d", &x);
+        int check_x = 0;
+        while(!check_x){
+            check_x = scanf("%d", &x);
+        }
+
         if (x < 0 || x > game->board_size_x - 1){
             printf("Ordonnee non existante dans le repere, veuillez saisir une nouvelle abscisse\n");
         }
