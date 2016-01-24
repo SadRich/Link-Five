@@ -1,9 +1,9 @@
 # depslib dependency file v1.0
-1453513322 source:d:\documents\school\dut info\projet\link five\game.c
+1453595472 source:d:\documents\school\dut info\projet\link five\game.c
 	<stdio.h>
 	<stdlib.h>
 
-1453499870 source:d:\documents\school\dut info\projet\link five\main.c
+1453588186 source:d:\documents\school\dut info\projet\link five\main.c
 	<stdio.h>
 	<stdlib.h>
 	"game.h"

@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include "game.h"
 
-int main(int argc, char **argv)
+int main()
 {
-    game_struct *game = init_game(); // Cree une variable avec la structure game_struct et a qui on lui attribue comme valeur la fonction init_game
-    start_game(game);
+    game_struct *game = init_game(); // Cree une variable avec la structure game_struct et a qui on lui attribue comme valeur la fonction init_game qui a la meme structure pour plus de proprete
+    start_game(game); // on APPELLE la fonction start_game() avec comme parametre game (ainsi que ses variables initialisees precedement)
 
     free(game);
-    system("pause");
+    system("pause"); // laisser la console affichee une fois le programme termine
     return 0;
 }
