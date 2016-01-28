@@ -201,10 +201,10 @@ int input_x(game_struct *game) // demande a l'utilisateur de saisir une valeur, 
         while(!check_x){
             check_x = scanf("%d", &x);
         }
-
         if (x < 0 || x > game->board_size_x){
             printf("Ordonnee non existante dans le repere, veuillez saisir une nouvelle abscisse\n");
         }
+
         int c;
         while ( ((c = getchar()) != '\n') && c != EOF) // getchar() va prendre ce qui a ete saisie et l'efface (donc rien n'est attribue a la variable). Si on rajoute != '/n' il va seulement prendre les elements saisie apres un retour a la ligne.
         { // EOF = End Of File => Fin du buffer. Du coup, on met && != EOF ce qui veut dire que la boucle va continuer a effacer les elements saisis apres "\n" jusqu'a la fin du buffer.
@@ -255,19 +255,42 @@ int start_game(game_struct *game) // on DEFINIT la fonction start_game qui va ut
             game->board[y-1][x-1] = 'O';
         }
         printf("x : %i, y : %i\n", x, y);
-        display_board(game); // on re-affiche le repere avec le pion joue
     }
     return 0;
 }
 
-/*int put_piece(int x, int y, char piece, game_struct *game)
+int victory_conditions(game, int board_size_x, int board_size_y, char **board, char *first_player)
 {
-    if(game->board[x][y] == NULL){
-        game->board[x][y] = piece;
+    for(i=0; i < game->board_size_x + 1; i++){
+        if(!victory_check_p1_x(int board_size_x, int board_size_y, char **board){
+           return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+}
+
+int victory_check_p1_x(game_struct *game)
+{
+    int i = 0;
+    int in_row_X = 0;
+    for(i=0; i < board_size_x + 1; i++){
+        if(game->board[i][y] == 'X'){
+            in_row_X = in_row_X+1;
+        }
+        if(in_row_X >= 5){
+            break;
+        }
+        else{
+            in_row_X = 0;
+        }
+        i = i+1;
+    }
+    if(in_row_X >= 5){
         return 1;
     }
-    else
-    {
-            return 0;
+    else{
+        return 0;
     }
-}*/
+}
