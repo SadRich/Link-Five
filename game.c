@@ -239,7 +239,7 @@ int input_coordinates(int *x, int *y, game_struct *game){
 
 int start_game(game_struct *game) // on DEFINIT la fonction start_game qui va utiliser la STRUCTURE "game" (avec ses variables ET SES VALEURS)
 {
-    while(1){
+    while(victory_conditions(game) != 1){
         display_board(game); // on APPELLE la fonction display_board qui va afficher le tableau avec la variable game
 
         printf("%s, jouez votre pion en entrant les coordonnees abscisse ordonnee\n", game->first_player);
@@ -256,14 +256,25 @@ int start_game(game_struct *game) // on DEFINIT la fonction start_game qui va ut
         }
         printf("x : %i, y : %i\n", x, y);
     }
+
     return 0;
 }
 
-int victory_conditions(game, int board_size_x, int board_size_y, char **board, char *first_player)
+int victory_conditions(game_struct *game, int board_size_x, int board_size_y, char **board, char *first_player)
 {
-    for(i=0; i < game->board_size_x + 1; i++){
-        if(!victory_check_p1_x(int board_size_x, int board_size_y, char **board){
+    int i;
+    for(i=1; i < game->board_size_x + 1; i++){
+        if(check_p1_row_x(game) == 1){
            return 1;
+        }
+        elif(check_p1_row_y(game) == 1){
+            return 1;
+        }
+        elif(check_p1_diag1(game) == 1){
+            return 1;
+        }
+        elif(check_p1_diag2(game) == 1){
+            return 1;
         }
         else{
             return 0;
@@ -271,26 +282,114 @@ int victory_conditions(game, int board_size_x, int board_size_y, char **board, c
     }
 }
 
-int victory_check_p1_x(game_struct *game)
+int check_p1_row_x(game_struct *game)
 {
-    int i = 0;
-    int in_row_X = 0;
-    for(i=0; i < board_size_x + 1; i++){
+    int i;
+    int check_p1_row_x = 0;
+    for(i=1; i < board_size_x + 1; i++){
         if(game->board[i][y] == 'X'){
-            in_row_X = in_row_X+1;
+            check_p1_row_x = check_p1_row_x+1;
         }
-        if(in_row_X >= 5){
+        elif(check_p1_row_x >= 5){
             break;
         }
         else{
-            in_row_X = 0;
+            check_p1_row_x = 0;
         }
         i = i+1;
     }
-    if(in_row_X >= 5){
+    if(check_p1_row_x >= 5){
         return 1;
     }
     else{
         return 0;
     }
 }
+
+int check_p1_row_y(game_struct *game)
+{
+    int i;
+    int check_p1_row_y = 0;
+    for(i=1; i < board_size_y + 1; i++){
+        if(game->board[x][i] == 'X'){
+            check_p1_row_y = check_p1_row_y+1;
+        }
+        elif(check_p1_row_y >= 5){
+            break;
+        }
+        else{
+            check_p1_row_y = 0;
+        }
+    }
+    if(check_p1_row_y >= 5){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+int check_p1_diag1(game_struct *game)
+{
+    int i;
+    int j = 0;
+    if(x < y){
+        i = x-1;
+    }
+    else{
+        i = y-1;
+    }
+    int check_p1_diag1 = 0;
+    while(j < board_size_x || j < board_size_y){
+        if(game->board[x-i][y-i] == 'X'){
+            check_p1_diag1 = check_p1_diag1+1;
+        }
+        elif(check_p1_diag1 >= 5){
+            break;
+        }
+        else{
+            check_p1_diag1 = 0;
+        }
+        x = x+1;
+        y = y+1;
+    }
+    if(check_p1_diag1 >= 5){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+int check_p1_diag2(game_struct *game)
+{
+    int i;
+    int j = 0;
+    if(x < y){
+        i = x-1;
+    }
+    else{
+        i = y-1;
+    }
+    int check_p1_diag2 = 0;
+    while(j < board_size_x || j < board_size_y){
+        if(game->board[x-i][y+i] == 'X'){
+            check_p1_diag2 = check_p1_diag2+1;
+        }
+        elif(check_p1_diag2 >= 5){
+            break;
+        }
+        else{
+            check_p1_diag2 = 0;
+        }
+        x = x+1;
+        y = y-1;
+    }
+    if(check_p1_diag2 >= 5){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
