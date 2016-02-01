@@ -237,16 +237,35 @@ int input_coordinates(int *x, int *y, game_struct *game){
     return valid_coordinates; // si les coordonnees sont valides, on retourne 1
 }
 
+/*void check_number(){
+
+    char *string = "1234567890";
+    for(int i = 0; i < string_length(string); i++){
+        char c = string[i];
+        int char_entier = (int) c;
+        if(c < 48 && c > 57){
+            return 1;
+        }
+    }
+    return 0;
+
+}
+*/
+int string_length(string){
+    //a toi de faire cette fonction
+}
 int start_game(game_struct *game) // on DEFINIT la fonction start_game qui va utiliser la STRUCTURE "game" (avec ses variables ET SES VALEURS)
 {
-    while(victory_conditions(game) != 1){
+    int x = -1, y = -1; // on initialise x et y par defaut avec une valeur hors du tableau donc -1 (0 fait partie du tableau) car si x et y
+    while(victory_conditions(game, x, y) != 1){
         display_board(game); // on APPELLE la fonction display_board qui va afficher le tableau avec la variable game
 
         printf("%s, jouez votre pion en entrant les coordonnees abscisse ordonnee\n", game->first_player);
-        int x = -1, y = -1; // on initialise x et y par defaut avec une valeur hors du tableau donc -1 (0 fait partie du tableau) car si x et y
+
         if(input_coordinates(&x, &y, game)){ // si les coordonnees rentrees par le joueur sont valides (input_coordinates = 1), on place alors son pion
             game->board[y-1][x-1] = 'X'; // on place le pion a l'emplacement board[y-1][x-1] car le repere commence a 1 alors que l'indice d'un tableau commence a 0
         }
+
         printf("x : %i, y : %i\n", x, y);
         display_board(game);// on re-affiche le repere avec le pion joue
 
@@ -260,10 +279,12 @@ int start_game(game_struct *game) // on DEFINIT la fonction start_game qui va ut
     return 0;
 }
 
-int victory_conditions(game_struct *game, int board_size_x, int board_size_y, char **board, char *first_player)
+int victory_conditions(game_struct *game, int x, int y)
 {
+    if(x == -1 && y == -1)
+        return 0;
     int i;
-    for(i=1; i < game->board_size_x + 1; i++){
+    for(i=0; i < game->board_size_x; i++){
         if(check_p1_row_x(game) == 1){
            return 1;
         }
@@ -282,106 +303,85 @@ int victory_conditions(game_struct *game, int board_size_x, int board_size_y, ch
     }
 }
 
-int check_p1_row_x(game_struct *game)
+int check_p1_row_x(game_struct *game, int y)
 {
     int i;
     int board_size_x = game->board_size_x;
-    int y = y;
     int check_p1_row_x = 0;
-    for(i=1; i < board_size_x + 1; i++){
+    for(i=0; i < board_size_x; i++){
         if(game->board[i][y] == 'X'){
             check_p1_row_x = check_p1_row_x+1;
         }
         else if(check_p1_row_x >= 5){
-            break;
+            return 1;
         }
         else{
             check_p1_row_x = 0;
         }
-        i = i+1;
     }
-    if(check_p1_row_x >= 5){
-        return 1;
-    }
-    else{
-        return 0;
-    }
+    return 0;
+
 }
 
-int check_p1_row_y(game_struct *game)
+int check_p1_row_y(game_struct *game, int x)
 {
     int i;
     int board_size_y = game->board_size_y;
-    int x = x;
     int check_p1_row_y = 0;
-    for(i=1; i < board_size_y + 1; i++){
+    for(i=0; i < board_size_y; i++){
         if(game->board[x][i] == 'X'){
             check_p1_row_y = check_p1_row_y+1;
         }
         else if(check_p1_row_y >= 5){
-            break;
+            return 1;
         }
         else{
             check_p1_row_y = 0;
         }
     }
-    if(check_p1_row_y >= 5){
-        return 1;
-    }
-    else{
-        return 0;
-    }
+    return 0;
 }
 
-int check_p1_diag1(game_struct *game)
+int check_p1_diag1(game_struct *game, int x, int y) // verif haut-gauche => bas-droite
 {
     int i;
     int j = 0;
     int board_size_x = game->board_size_x;
     int board_size_y = game->board_size_y;
-    int x = x;
-    int y = y;
-    if(x < y){
-        i = x-1;
+    if(x < y){ // on regarde la valeur la plus petite entre x et y pour connaitre le nombre d'incrementations (nb de cases verifies) pour j qui va eviter de sortir du tableau lors de la verification
+        i = x;
     }
     else{
-        i = y-1;
+        i = y;
     }
-    int check_p1_diag1 = 0;
+    int count_p1_diag1 = 0;
     while(j < board_size_x || j < board_size_y){
-        if(game->board[x-i][y-i] == 'X'){
-            check_p1_diag1 = check_p1_diag1+1;
+        if(game->board[x-i][y-i] == 'X'){ // on place le debut du parcours de verification au debut de la diagonale
+            count_p1_diag1 = count_p1_diag1+1; // on compte le nombre de pions alignes
         }
-        else if(check_p1_diag1 >= 5){
-            break;
+        else if(count_p1_diag1 >= 5){ // si il y a 5 pions ou plus alignes, on renvoie 1 pour la victoire du joueur
+            return 1;
         }
         else{
-            check_p1_diag1 = 0;
+            count_p1_diag1 = 0; // si il n'y a pas de pion du joueur, on remet le compteur a 0
         }
         x = x+1;
         y = y+1;
     }
-    if(check_p1_diag1 >= 5){
-        return 1;
-    }
-    else{
-        return 0;
-    }
+    return 0;
 }
 
-int check_p1_diag2(game_struct *game)
+int check_p1_diag2(game_struct *game, int x, int y) // verif bas-gauche => haut-droite
 {
     int i;
     int j = 0;
     int board_size_x = game->board_size_x;
     int board_size_y = game->board_size_y;
-    int x = x;
-    int y = y;
     if(x < y){
-        i = x-1;
+        i = x;
     }
     else{
-        i = y-1;
+        i = y;
     }
     int check_p1_diag2 = 0;
     while(j < board_size_x || j < board_size_y){
@@ -389,7 +389,7 @@ int check_p1_diag2(game_struct *game)
             check_p1_diag2 = check_p1_diag2+1;
         }
         else if(check_p1_diag2 >= 5){
-            break;
+            return 1;
         }
         else{
             check_p1_diag2 = 0;
@@ -397,11 +397,6 @@ int check_p1_diag2(game_struct *game)
         x = x+1;
         y = y-1;
     }
-    if(check_p1_diag2 >= 5){
-        return 1;
-    }
-    else{
-        return 0;
-    }
+    return 0;
 }
 
