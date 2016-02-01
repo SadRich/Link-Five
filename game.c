@@ -267,13 +267,13 @@ int victory_conditions(game_struct *game, int board_size_x, int board_size_y, ch
         if(check_p1_row_x(game) == 1){
            return 1;
         }
-        elif(check_p1_row_y(game) == 1){
+        else if(check_p1_row_y(game) == 1){
             return 1;
         }
-        elif(check_p1_diag1(game) == 1){
+        else if(check_p1_diag1(game) == 1){
             return 1;
         }
-        elif(check_p1_diag2(game) == 1){
+        else if(check_p1_diag2(game) == 1){
             return 1;
         }
         else{
@@ -285,12 +285,14 @@ int victory_conditions(game_struct *game, int board_size_x, int board_size_y, ch
 int check_p1_row_x(game_struct *game)
 {
     int i;
+    int board_size_x = game->board_size_x;
+    int y = y;
     int check_p1_row_x = 0;
     for(i=1; i < board_size_x + 1; i++){
         if(game->board[i][y] == 'X'){
             check_p1_row_x = check_p1_row_x+1;
         }
-        elif(check_p1_row_x >= 5){
+        else if(check_p1_row_x >= 5){
             break;
         }
         else{
@@ -309,12 +311,14 @@ int check_p1_row_x(game_struct *game)
 int check_p1_row_y(game_struct *game)
 {
     int i;
+    int board_size_y = game->board_size_y;
+    int x = x;
     int check_p1_row_y = 0;
     for(i=1; i < board_size_y + 1; i++){
         if(game->board[x][i] == 'X'){
             check_p1_row_y = check_p1_row_y+1;
         }
-        elif(check_p1_row_y >= 5){
+        else if(check_p1_row_y >= 5){
             break;
         }
         else{
@@ -333,6 +337,10 @@ int check_p1_diag1(game_struct *game)
 {
     int i;
     int j = 0;
+    int board_size_x = game->board_size_x;
+    int board_size_y = game->board_size_y;
+    int x = x;
+    int y = y;
     if(x < y){
         i = x-1;
     }
@@ -344,7 +352,7 @@ int check_p1_diag1(game_struct *game)
         if(game->board[x-i][y-i] == 'X'){
             check_p1_diag1 = check_p1_diag1+1;
         }
-        elif(check_p1_diag1 >= 5){
+        else if(check_p1_diag1 >= 5){
             break;
         }
         else{
@@ -365,6 +373,10 @@ int check_p1_diag2(game_struct *game)
 {
     int i;
     int j = 0;
+    int board_size_x = game->board_size_x;
+    int board_size_y = game->board_size_y;
+    int x = x;
+    int y = y;
     if(x < y){
         i = x-1;
     }
@@ -376,7 +388,7 @@ int check_p1_diag2(game_struct *game)
         if(game->board[x-i][y+i] == 'X'){
             check_p1_diag2 = check_p1_diag2+1;
         }
-        elif(check_p1_diag2 >= 5){
+        else if(check_p1_diag2 >= 5){
             break;
         }
         else{
