@@ -77,3 +77,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+#CLion
+.idea/
+CMakeLists.txt
+..gitignore.swp
