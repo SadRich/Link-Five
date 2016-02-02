@@ -10,6 +10,19 @@ typedef struct game{ // Creation d'une structure
     int board_size_y;
 }game_struct; //nommage du type qui sera declare plus tard
 
+/** Regle numero 1 : toutes tes fonctions doivent etre declarees ici pour qu'elles puissent etre appelee plus bas dans le fichier **/
+game_struct* new_game(char *first_player, char *second_player, int board_size_x, int board_size_y);
+char** init_board(char **board, int board_size_x, int board_size_y);
+void display_board(game_struct *game);
+game_struct* init_game();
+int start_game(game_struct *game);
+int check_p1_diag2(game_struct *game, int x, int y);
+int check_p1_diag1(game_struct *game, int x, int y);
+int check_p1_row_y(game_struct *game, int x);
+int check_p1_row_x(game_struct *game, int y);
+int victory_conditions(game_struct *game, int x, int y);
+/***********************************************************************************************************************************/
+
 /*int input_board_size_x(int size_x)
 {
     int board_size_x;
@@ -250,10 +263,10 @@ int input_coordinates(int *x, int *y, game_struct *game){
     return 0;
 
 }
-*/
+
 int string_length(string){
     //a toi de faire cette fonction
-}
+}*/
 int start_game(game_struct *game) // on DEFINIT la fonction start_game qui va utiliser la STRUCTURE "game" (avec ses variables ET SES VALEURS)
 {
     int x = -1, y = -1; // on initialise x et y par defaut avec une valeur hors du tableau donc -1 (0 fait partie du tableau) car si x et y
@@ -285,21 +298,24 @@ int victory_conditions(game_struct *game, int x, int y)
         return 0;
     int i;
     for(i=0; i < game->board_size_x; i++){
-        if(check_p1_row_x(game) == 1){
+
+        /** Regle numero 2 : Toujours verifier que les fonctions que l'on appelle ont des parametres concordant avec ceux de la fonction declaree **/
+        if(check_p1_row_x(game, y) == 1){
            return 1;
         }
-        else if(check_p1_row_y(game) == 1){
+        else if(check_p1_row_y(game, x) == 1){
             return 1;
         }
-        else if(check_p1_diag1(game) == 1){
+        else if(check_p1_diag1(game, x, y) == 1){
             return 1;
         }
-        else if(check_p1_diag2(game) == 1){
+        else if(check_p1_diag2(game, x, y) == 1){
             return 1;
         }
         else{
             return 0;
         }
+        /*******************************************************************************************************************************************/
     }
 }
 
@@ -356,6 +372,8 @@ int check_p1_diag1(game_struct *game, int x, int y) // verif haut-gauche => bas-
     }
     int count_p1_diag1 = 0;
     while(j < board_size_x || j < board_size_y){
+
+        /** Regle numero 3 : toujours verifier si on depasse les limites d'un tableau (valable aussi pour l'autre fonction de diagonale) **/
         if(game->board[x-i][y-i] == 'X'){ // on place le debut du parcours de verification au debut de la diagonale
             count_p1_diag1 = count_p1_diag1+1; // on compte le nombre de pions alignes
         }
@@ -367,6 +385,8 @@ int check_p1_diag1(game_struct *game, int x, int y) // verif haut-gauche => bas-
         }
         x = x+1;
         y = y+1;
+        /**********************************************************************************************************************************/
+
     }
     return 0;
 }
@@ -399,4 +419,6 @@ int check_p1_diag2(game_struct *game, int x, int y) // verif bas-gauche => haut-
     }
     return 0;
 }
+
+/** REGLE PRINCIPALE : TOUJOURS REGARDER LES ERREURS DE COMPILATIONS **/
 
