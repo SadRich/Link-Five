@@ -8,6 +8,6 @@ int main()
     start_game(game); // on APPELLE la fonction start_game() avec comme parametre game (ainsi que ses variables initialisees precedement)
 
     free(game);
-    system("pause"); // laisser la console affichee une fois le programme termine
+    //system("pause"); // laisser la console affichee une fois le programme termine !!! (Ne marche que sur Windows) !!!
     return 0;
 }
