@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1454367074 source:d:\documents\school\dut info\projet\link five\game.c
+1454616928 source:d:\documents\school\dut info\projet\link five\game.c
 	<stdio.h>
 	<stdlib.h>
 
-1453596748 source:d:\documents\school\dut info\projet\link five\main.c
+1454500496 source:d:\documents\school\dut info\projet\link five\main.c
 	<stdio.h>
 	<stdlib.h>
 	"game.h"
 
-1451056148 d:\documents\school\dut info\projet\link five\game.h
+1454500496 d:\documents\school\dut info\projet\link five\game.h
 
