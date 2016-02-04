@@ -19,5 +19,5 @@ int check_p1_diag1(game_struct *game, int x, int y);
 int check_p1_row_y(game_struct *game, int x);
 int check_p1_row_x(game_struct *game, int y);
 int victory_conditions(game_struct *game, int x, int y);
-
+int victory_check(int check_p1_row_x, int check_p1_row_y, int check_p1_diag1, int check_p1_diag2);
 #endif // GAME_H_INCLUDED
