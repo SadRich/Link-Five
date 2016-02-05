@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "game.h"
+
 
 typedef struct game{ // Creation d'une structure
     char **board; //Tableau a deux dimensions contenant le plateau de jeu
@@ -77,6 +79,42 @@ game_struct* new_game(char *first_player, char *second_player, int board_size_x,
     return game; // on retourne toutes les valeurs ci dessus pour toutes les variables de la structure game
 }
 
+int power(int number, int power){
+    int res = 1, i;
+    for(i = 0; i < power; i++){
+        res *= number;
+    }
+    return res;
+}
+
+int string_length(char *string){ // on calcule la longueur de la chaine
+    int i = 0;
+    while(string[i] != '\0'){
+        i++;
+    }
+    return i;
+}
+
+int is_integer(char *string){ // on verifie si la valeur entree est un entier
+    int i;
+    for(i = 0; i < string_length(string); i++){
+        if(string[i] < 48 || string[i] > 57){
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int string_to_integer(char *string){
+    int res;
+    int i, j = 0;
+    res = 0;  // ex: 143 (49, 52, 51) pour convertir les string en integer, il faut decomposer les nb par chiffres puis calculer (avec l'exemple) 100 = 10²*(49-48), 40 = 10^1*(52-48), 3 = 10^0*(51-48)
+    for(i = string_length(string); i > 0; i--){
+        res += power(10, i -1) * (((int)string[j]) - 48);
+        j++;
+    }
+    return res;
+}
 game_struct* init_game(){
     char *first_player, *second_player;
     first_player = malloc(100 * sizeof(char)); // tableau a 100 caracteres
@@ -88,6 +126,10 @@ game_struct* init_game(){
     int check_first_player = 0;
     while(!check_first_player) {
         check_first_player = scanf("%s", first_player); // va etre utilise dans la fonction new_game
+        char c;
+        while ( ((c = getchar()) != '\n') && c != EOF) // getchar() va prendre ce qui a ete saisie et l'efface (donc rien n'est attribue a la variable). Si on rajoute != '/n' il va seulement prendre les elements saisie apres un retour a la ligne.
+        { // EOF = End Of File => Fin du buffer. Du coup, on met && != EOF ce qui veut dire que la boucle va continuer a effacer les elements saisis apres "\n" jusqu'a la fin du buffer.
+        }; // si on ne met pas cette boucle, le joueur pourra saisir par exemple "hahah\nlolol" dans le premier scanf donc "lolol" sera automatiquement recupere par le prochain scanf sans demander a l'utilisateur de saisir une valeur.
     }
 
     printf("\nJoueur 2 : ");
@@ -96,12 +138,19 @@ game_struct* init_game(){
         check_second_player = scanf("%s", second_player);
     } // va etre utilise dans la fonction new_game
 
+    char *board_size_x_char = malloc(200 * sizeof(char*));
     int board_size_x;
     printf("Definissez le nombre de colonnes pour le repere (min = 10 et max = 20):\n");
     do{
         int check_board_size_x = 0;
         while(!check_board_size_x){ // !x = tant que la variable est egale a 0
-            check_board_size_x = scanf("%d", &board_size_x); // s'íl y a un probleme avec la fonction scanf, celle-ci retourne la valeur 0. sinon, elle retourne la valeur 1. On stocke donc cette valeur afin d'etre sur que board_size_x contient bien la valeur qui a ete saisie par l'utilisateur. (ça marche comme ça, c'est la doc de scanf)
+            check_board_size_x = scanf("%s", board_size_x_char); // s'íl y a un probleme avec la fonction scanf, celle-ci retourne la valeur 0. sinon, elle retourne la valeur 1. On stocke donc cette valeur afin d'etre sur que board_size_x contient bien la valeur qui a ete saisie par l'utilisateur. (ça marche comme ça, c'est la doc de scanf)
+            check_board_size_x = is_integer(board_size_x_char);
+            if(check_board_size_x){
+                board_size_x = string_to_integer(board_size_x_char);
+            }else{
+                printf("Valeur invalide. Veuillez saisir un nombre\n\nDefinissez le nombre de colonnes pour le repere (min = 10 et max = 20):\n");
+            }
         }
 
         if(board_size_x >= 10 && board_size_x <= 20){
@@ -113,11 +162,18 @@ game_struct* init_game(){
     }while(board_size_x < 10 || board_size_x > 20);
 
     int board_size_y;
+    char *board_size_y_char = malloc(200 * sizeof(char*));
     printf("Definissez le nombre de lignes pour le repere (min = 10 et max = 20):\n");
     do{
         int check_board_size_y = 0;
-        while(!check_board_size_y){
-            check_board_size_y = scanf("%d", &board_size_y);
+        while(!check_board_size_y){ // !x = tant que la variable est egale a 0
+            check_board_size_y = scanf("%s", board_size_y_char); // s'íl y a un probleme avec la fonction scanf, celle-ci retourne la valeur 0. sinon, elle retourne la valeur 1. On stocke donc cette valeur afin d'etre sur que board_size_x contient bien la valeur qui a ete saisie par l'utilisateur. (ça marche comme ça, c'est la doc de scanf)
+            check_board_size_y = is_integer(board_size_y_char);
+            if(check_board_size_y){
+                board_size_y = string_to_integer(board_size_y_char);
+            }else{
+                printf("Veillez saisir un nombre\n\nDefinissez le nombre de lignes pour le repere (min = 10 et max = 20):\n");
+            }
         }
         if(board_size_y >= 10 && board_size_y <= 20){
             printf("Nombre de lignes: %d\n", board_size_y);
@@ -178,9 +234,17 @@ int input_y(game_struct *game)
     do{
         printf("Entrez l'ordonnee : ");
         int check_y = 0;
-        while(!check_y){
-            check_y = scanf("%d", &y);
+        char *y_char = malloc(200 * sizeof(char*));
+        while(!check_y){ // !x = tant que la variable est egale a 0
+            check_y = scanf("%s", y_char); // s'íl y a un probleme avec la fonction scanf, celle-ci retourne la valeur 0. sinon, elle retourne la valeur 1. On stocke donc cette valeur afin d'etre sur que board_size_x contient bien la valeur qui a ete saisie par l'utilisateur. (ça marche comme ça, c'est la doc de scanf)
+            check_y = is_integer(y_char);
+            if(check_y){
+                y = string_to_integer(y_char);
+            }else{
+                printf("Veillez saisir un nombre\nEntrez l'ordonnee : ");
+            }
         }
+
         if (y < 0 || y > game->board_size_y){
             printf("Ordonnee non existante dans le repere, veuillez saisir une nouvelle ordonnee\n");
         }
@@ -197,9 +261,17 @@ int input_x(game_struct *game) // demande a l'utilisateur de saisir une valeur, 
     int x = -1;
     do{
         printf("Entrez l'abscisse : ");
+
         int check_x = 0;
-        while(!check_x){
-            check_x = scanf("%d", &x);
+        char *x_char = malloc(200 * sizeof(char*));
+        while(!check_x){ // !x = tant que la variable est egale a 0
+            check_x = scanf("%s", x_char); // s'íl y a un probleme avec la fonction scanf, celle-ci retourne la valeur 0. sinon, elle retourne la valeur 1. On stocke donc cette valeur afin d'etre sur que board_size_x contient bien la valeur qui a ete saisie par l'utilisateur. (ça marche comme ça, c'est la doc de scanf)
+            check_x = is_integer(x_char);
+            if(check_x){
+                x = string_to_integer(x_char);
+            }else{
+                printf("Veillez saisir un nombre\nEntrez l'abscisse : ");
+            }
         }
         if (x < 0 || x > game->board_size_x){
             printf("Ordonnee non existante dans le repere, veuillez saisir une nouvelle abscisse\n");
@@ -318,7 +390,7 @@ int check_p1_x(int x, int y, game_struct *game) {
         return 0;
     }
     for(i=x; i <= x+game->force-1; i++) {
-        if(game->board[i][y] != 'X'){
+        if(game->board[y][i] != 'X'){
             return 0;
         }
     }
@@ -331,7 +403,7 @@ int check_p1_y(int x, int y, game_struct *game) {
         return 0;
     }
     for(i=y; i <= y+game->force-1; i++) {
-        if(game->board[x][i] != 'X'){
+        if(game->board[i][x] != 'X'){
             return 0;
         }
     }
@@ -382,7 +454,7 @@ int check_p2_x(int x, int y, game_struct *game) {
         return 0;
     }
     for(i=x; i <= x+game->force-1; i++) {
-        if(game->board[i][y] != 'O'){
+        if(game->board[y][i] != 'O'){
             return 0;
         }
     }
@@ -395,7 +467,7 @@ int check_p2_y(int x, int y, game_struct *game) {
         return 0;
     }
     for(i=y; i <= y+game->force-1; i++) {
-        if(game->board[x][i] != 'O'){
+        if(game->board[i][x] != 'O'){
             return 0;
         }
     }

@@ -8,7 +8,6 @@ typedef struct game{
     int board_size_x;
     int board_size_y;
     int force;
-    char p1;
 }game_struct;
 
 game_struct* new_game(char *first_player, char *second_player, int board_size_x, int board_size_y);
@@ -27,4 +26,13 @@ int check_p2_y(int x, int y, game_struct *game);
 int check_p2_diag1(int x, int y, game_struct *game);
 int check_p2_diag2(int x, int y, game_struct *game);
 game_struct* play_again(game_struct *game);
+
+int power(int number, int power);
+int is_integer(char *string);
+int string_length(char *string);
+int string_to_integer(char *string);
+
+
+
+
 #endif // GAME_H_INCLUDED
