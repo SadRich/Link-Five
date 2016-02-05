@@ -33,6 +33,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="check.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="check.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="game.c">
 			<Option compilerVar="CC" />
 		</Unit>
